@@ -1,37 +1,39 @@
 <div id="journal-{{ entry.id }}" 
-     class="bg-brand-card border rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.01] flex flex-col justify-between
-            {% if entry.status.lower() == 'win' %}border-brand-success/30 glow-success/5
-            {% elif entry.status.lower() == 'loss' %}border-brand-danger/30 glow-danger/5
-            {% elif entry.status.lower() == 'cancelled' %}border-gray-500/20
-            {% else %}border-brand-gold/30 glow-gold/5{% endif %}">
+     class="bg-[#1e293b] border rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.01] flex flex-col justify-between
+            {% if entry.status.lower() == 'win' %}border-green-500/30 shadow-lg shadow-green-950/10
+            {% elif entry.status.lower() == 'loss' %}border-red-500/30 shadow-lg shadow-red-950/10
+            {% elif entry.status.lower() == 'cancelled' %}border-slate-700/50
+            {% else %}border-blue-500/30 shadow-lg shadow-blue-950/10{% endif %}">
             
     <!-- Chart Preview -->
-    <div class="relative h-44 bg-brand-dark/50 overflow-hidden group">
+    <div class="relative h-44 bg-[#0b0f1a] overflow-hidden group">
         {% if entry.image_url %}
             <img src="{{ entry.image_url }}" alt="{{ entry.pair }} Chart" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-            <a href="{{ entry.image_url }}" target="_blank" class="absolute inset-0 bg-brand-dark/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-200">
-                <span class="text-xs font-mono font-bold text-white bg-brand-dark/80 px-3 py-1.5 rounded-full border border-brand-accent">VIEW CHART</span>
+            <a href="{{ entry.image_url }}" target="_blank" class="absolute inset-0 bg-[#0b0f1a]/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-200">
+                <span class="text-xs font-semibold text-white bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">LIHAT CHART</span>
             </a>
         {% else %}
-            <div class="w-full h-full flex flex-col items-center justify-center text-gray-600 font-mono text-xs">
-                <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                NO CHART UPLOADED
+            <div class="w-full h-full flex flex-col items-center justify-center text-slate-500 text-xs">
+                <svg class="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                TIDAK ADA CHART
             </div>
         {% endif %}
         
         <!-- Badge Type & Leverage -->
         <div class="absolute top-3 left-3 flex gap-1.5">
-            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono tracking-wider text-brand-dark
-                         {% if entry.position_type.lower() == 'long' %}bg-brand-success{% else %}bg-brand-danger{% endif %}">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold text-white
+                         {% if entry.position_type.lower() == 'long' %}bg-green-600{% else %}bg-red-600{% endif %}">
                 {{ entry.position_type.upper() }}
             </span>
-            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold font-mono tracking-wider bg-brand-accent/90 text-brand-gold border border-brand-accent">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-slate-800 text-yellow-500 border border-slate-700">
                 {{ entry.leverage }}X
             </span>
         </div>
 
         <!-- Date Badge -->
-        <span class="absolute top-3 right-3 text-[10px] font-mono text-gray-400 bg-brand-dark/80 px-2 py-0.5 rounded-md border border-brand-accent">
+        <span class="absolute top-3 right-3 text-[10px] text-slate-400 bg-slate-850/80 px-2 py-0.5 rounded-md border border-slate-700">
             {{ entry.created_at.strftime('%d %b %H:%M') }}
         </span>
     </div>
@@ -41,54 +43,54 @@
         <div>
             <!-- Header Pair & PnL -->
             <div class="flex justify-between items-start mb-2">
-                <span class="font-mono font-bold text-white text-lg tracking-tight">{{ entry.pair.upper() }}</span>
-                <span class="font-mono font-bold text-sm
-                             {% if entry.pnl > 0 %}text-brand-success
-                             {% elif entry.pnl < 0 %}text-brand-danger
-                             {% else %}text-gray-400{% endif %}">
+                <span class="font-bold text-white text-lg tracking-tight">{{ entry.pair.upper() }}</span>
+                <span class="font-bold text-sm
+                             {% if entry.pnl > 0 %}text-green-400
+                             {% elif entry.pnl < 0 %}text-red-400
+                             {% else %}text-slate-400{% endif %}">
                     {% if entry.pnl > 0 %}+{% endif %}{{ entry.pnl }}%
                 </span>
             </div>
 
             <!-- Parameters Grid -->
-            <div class="grid grid-cols-3 gap-1 bg-brand-dark/40 p-2 rounded-xl border border-brand-accent/30 text-[11px] font-mono mb-3 text-center">
+            <div class="grid grid-cols-3 gap-1 bg-[#0b0f1a] p-2 rounded-xl border border-slate-750 text-[11px] mb-3 text-center">
                 <div>
-                    <span class="text-gray-500 block text-[9px] uppercase">Entry</span>
+                    <span class="text-slate-500 block text-[9px] uppercase">Entry</span>
                     <span class="text-white">{{ entry.entry_price or '-' }}</span>
                 </div>
                 <div>
-                    <span class="text-gray-500 block text-[9px] uppercase">Target (TP)</span>
-                    <span class="text-brand-success">{{ entry.tp_price or '-' }}</span>
+                    <span class="text-slate-500 block text-[9px] uppercase">Target (TP)</span>
+                    <span class="text-green-400">{{ entry.tp_price or '-' }}</span>
                 </div>
                 <div>
-                    <span class="text-gray-500 block text-[9px] uppercase">Stop (SL)</span>
-                    <span class="text-brand-danger">{{ entry.sl_price or '-' }}</span>
+                    <span class="text-slate-500 block text-[9px] uppercase">Stop (SL)</span>
+                    <span class="text-red-400">{{ entry.sl_price or '-' }}</span>
                 </div>
             </div>
 
             <!-- Notes -->
-            <p class="text-xs text-gray-400 line-clamp-3 leading-relaxed mb-4">
-                {{ entry.notes or 'No notes provided.' }}
+            <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-4">
+                {{ entry.notes or 'Tidak ada catatan.' }}
             </p>
 
             {% if entry.status.lower() == 'running' %}
             <button hx-get="/journal/{{ entry.id }}/edit" 
                     hx-target="#journal-{{ entry.id }}" 
                     hx-swap="outerHTML" 
-                    class="w-full mb-4 bg-brand-gold/10 hover:bg-brand-gold text-brand-gold hover:text-brand-dark border border-brand-gold/30 hover:border-transparent py-1.5 px-3 rounded-xl text-xs font-mono font-bold transition-all text-center">
-                UPDATE / CLOSE TRADE
+                    class="w-full mb-4 bg-green-600/10 hover:bg-green-600 text-green-400 hover:text-white border border-green-500/30 hover:border-transparent py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center">
+                UPDATE / TUTUP TRANSAKSI
             </button>
             {% endif %}
         </div>
 
         <!-- Card Action Footer -->
-        <div class="flex items-center justify-between pt-3 border-t border-brand-accent/30">
+        <div class="flex items-center justify-between pt-3 border-t border-slate-700">
             <!-- Status Pill -->
-            <span class="px-2 py-1 rounded-md text-[10px] font-bold font-mono
-                         {% if entry.status.lower() == 'win' %}bg-brand-success/10 text-brand-success
-                         {% elif entry.status.lower() == 'loss' %}bg-brand-danger/10 text-brand-danger
-                         {% elif entry.status.lower() == 'cancelled' %}bg-gray-500/10 text-gray-400
-                         {% else %}bg-brand-gold/10 text-brand-gold{% endif %}">
+            <span class="px-2 py-1 rounded-md text-[10px] font-bold
+                         {% if entry.status.lower() == 'win' %}bg-green-500/10 text-green-400
+                         {% elif entry.status.lower() == 'loss' %}bg-red-500/10 text-red-400
+                         {% elif entry.status.lower() == 'cancelled' %}bg-slate-500/10 text-slate-400
+                         {% else %}bg-blue-500/10 text-blue-400{% endif %}">
                 ● {{ entry.status.upper() }}
             </span>
 
@@ -97,17 +99,21 @@
                 <button hx-get="/journal/{{ entry.id }}/edit" 
                         hx-target="#journal-{{ entry.id }}" 
                         hx-swap="outerHTML" 
-                        class="text-gray-500 hover:text-brand-gold transition-colors p-1 rounded-lg hover:bg-brand-gold/10">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        class="text-slate-400 hover:text-green-500 transition-colors p-1 rounded-lg hover:bg-slate-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
                 </button>
 
                 <!-- Delete Button -->
                 <button hx-delete="/journal/{{ entry.id }}" 
                         hx-target="#journal-{{ entry.id }}" 
                         hx-swap="outerHTML" 
-                        hx-confirm="Are you sure you want to delete this journal entry?"
-                        class="text-gray-500 hover:text-brand-danger transition-colors p-1 rounded-lg hover:bg-brand-danger/10">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        hx-confirm="Apakah Anda yakin ingin menghapus catatan jurnal ini?"
+                        class="text-slate-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-slate-800">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
                 </button>
             </div>
         </div>

@@ -3,114 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cryptonicle - Crypto Futures Trading Journal</title>
-    <!-- Tailwind CSS Play CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Trading Journal Dashboard</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        mono: ['"Space Grotesk"', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            gold: '#F3BA2F', // Binance Yellow/Gold
-                            dark: '#0B0E11',
-                            card: '#181A20',
-                            accent: '#2B3139',
-                            success: '#0ECB81',
-                            danger: '#F6465D',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #0B0E11;
-            color: #EAECEF;
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f1a;
+            color: #e2e8f0;
         }
-        /* Custom scrollbar */
+
+        /* Custom scrollbar for a cleaner look */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #0B0E11;
+            background: #0f172a;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #2B3139;
-            border-radius: 4px;
+            background: #334155;
+            border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #F3BA2F;
+            background: #22c55e;
         }
-        .glow-gold {
-            box-shadow: 0 0 20px rgba(243, 186, 47, 0.15);
+
+        .active-nav {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-right: 3px solid #22c55e;
         }
-        .glow-success {
-            box-shadow: 0 0 20px rgba(14, 203, 129, 0.15);
-        }
-        .glow-danger {
-            box-shadow: 0 0 20px rgba(246, 70, 93, 0.15);
+
+        .table-row-hover:hover {
+            background-color: rgba(255, 255, 255, 0.02);
         }
     </style>
 </head>
-<body class="font-sans antialiased min-h-screen flex flex-col selection:bg-brand-gold selection:text-brand-dark">
-
-    <!-- Header Navigation -->
-    <header class="border-b border-brand-accent/50 bg-brand-dark/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-gold to-yellow-500 flex items-center justify-center font-mono font-bold text-brand-dark text-lg shadow-lg shadow-brand-gold/20">
-                        C
-                    </div>
-                    <span class="font-mono text-xl font-bold tracking-tight text-white">CRYPTONICLE</span>
+<body class="antialiased overflow-hidden min-h-screen">
+    <div class="flex h-screen overflow-hidden" data-purpose="main-wrapper">
+        <!-- BEGIN: Sidebar -->
+        <aside class="w-64 bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0" data-purpose="navigation-sidebar">
+            <!-- Logo Section -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-8 h-8 bg-green-500 rounded flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#0f172a]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+                    </svg>
                 </div>
-                
-                <!-- Nav Links -->
-                <nav class="flex items-center gap-1">
-                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-brand-accent {% if active_page == 'journal' %}bg-brand-accent text-brand-gold{% else %}text-gray-400 hover:text-white{% endif %}">
-                        Journal
-                    </a>
-                    <a href="/backtest" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-brand-accent {% if active_page == 'backtest' %}bg-brand-accent text-brand-gold{% else %}text-gray-400 hover:text-white{% endif %}">
-                        Backtest Mode
-                    </a>
-                </nav>
-                
-                <!-- Quick Stats Badge -->
-                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/40 border border-brand-accent text-xs">
-                    <span class="w-2 h-2 rounded-full bg-brand-success animate-pulse"></span>
-                    <span class="text-gray-400 font-medium">Crypto Futures Mode Active</span>
+                <h1 class="text-xl font-bold tracking-tight text-white">Trading Journal</h1>
+            </div>
+            <!-- Nav Links -->
+            <nav class="flex-1 px-3 space-y-1 py-4">
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_page == 'journal' %}active-nav text-green-500{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}" href="/">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Dashboard Jurnal</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_page == 'backtest' %}active-nav text-green-500{% else %}text-slate-400 hover:text-white hover:bg-slate-800{% endif %}" href="/backtest">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Backtest Mode</span>
+                </a>
+            </nav>
+            <!-- Bottom Card: Daily Notes -->
+            <div class="px-4 pb-6 mt-auto">
+                <div class="bg-[#1e293b] p-5 rounded-xl border border-slate-700 relative overflow-hidden" data-purpose="daily-notes-card">
+                    <h3 class="text-white font-semibold text-sm mb-2">Catatan Harian</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Fokus pada proses, bukan hasil. Disiplin hari ini, konsisten selamanya.
+                    </p>
+                    <div class="mt-4 text-green-500 text-right">
+                        <svg class="w-6 h-6 inline-block rotate-180" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V12C20.017 11.4477 19.5693 11 19.017 11H15.017C13.9124 11 13.017 11.8954 13.017 13V18C13.017 19.6569 14.3601 21 16.017 21H14.017ZM6.017 21L6.017 18C6.017 16.8954 6.91243 16 8.017 16H11.017C11.5693 16 12.017 15.5523 12.017 15V12C12.017 11.4477 11.5693 11 11.017 11H7.017C5.91243 11 5.017 11.8954 5.017 13V18C5.017 19.6569 6.36014 21 8.017 21H6.017Z"></path>
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </div>
-    </header>
+        </aside>
+        <!-- END: Sidebar -->
 
-    <!-- Main Content Area -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-brand-accent/30 py-6 bg-brand-dark/40">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-500">
-            &copy; 2026 Cryptonicle. Designed for personal crypto futures journaling.
-        </div>
-    </footer>
-
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col overflow-y-auto" data-purpose="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 </body>
 </html>
