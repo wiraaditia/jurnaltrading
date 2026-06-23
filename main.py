@@ -26,7 +26,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # Jinja2 Templates Setup
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "templates"))
 
 # Helper function to compute journal stats
 def get_journal_stats(db: Session):
