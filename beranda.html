@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Trading Journal Dashboard</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <style data-purpose="custom-theme">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f1a;
+            color: #e2e8f0;
+        }
+
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        .active-nav {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-right: 3px solid #22c55e;
+        }
+
+        .table-row-hover:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+    </style>
+</head>
+
+<body class="antialiased overflow-hidden">
+    <div class="flex h-screen overflow-hidden" data-purpose="main-wrapper">
+        <!-- BEGIN: Sidebar -->
+        <aside class="w-64 bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0"
+            data-purpose="navigation-sidebar">
+            <!-- Logo Section -->
+            <div class="p-6 flex items-center gap-3">
+                <div class="w-8 h-8 bg-green-500 rounded flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#0f172a]" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                            d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-xl font-bold tracking-tight">Trading Journal</h1>
+            </div>
+            <!-- Nav Links -->
+            <nav class="flex-1 px-3 space-y-1 py-4">
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav transition-colors" href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Dashboard</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Jurnal</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Statistik</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Calendar</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Setup</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Backup</span>
+                </a>
+                <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                    href="#">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m12 4a2 2 0 100-4m0 4a2 2 0 110-4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m-4 2a2 2 0 104 0m-4 0a2 2 0 114 0"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                    </svg>
+                    <span class="font-medium">Pengaturan</span>
+                </a>
+            </nav>
+            <!-- Bottom Card: Daily Notes -->
+            <div class="px-4 pb-6 mt-auto">
+                <div class="bg-[#1e293b] p-5 rounded-xl border border-slate-700 relative overflow-hidden"
+                    data-purpose="daily-notes-card">
+                    <h3 class="text-white font-semibold text-sm mb-2">Catatan Harian</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        Fokus pada proses, bukan hasil. Disiplin hari ini, konsisten selamanya.
+                    </p>
+                    <div class="mt-4 text-green-500 text-right">
+                        <svg class="w-6 h-6 inline-block rotate-180" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V12C20.017 11.4477 19.5693 11 19.017 11H15.017C13.9124 11 13.017 11.8954 13.017 13V18C13.017 19.6569 14.3601 21 16.017 21H14.017ZM6.017 21L6.017 18C6.017 16.8954 6.91243 16 8.017 16H11.017C11.5693 16 12.017 15.5523 12.017 15V12C12.017 11.4477 11.5693 11 11.017 11H7.017C5.91243 11 5.017 11.8954 5.017 13V18C5.017 19.6569 6.36014 21 8.017 21H6.017Z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <!-- END: Sidebar -->
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col overflow-y-auto" data-purpose="main-content">
+            <!-- BEGIN: Page Header -->
+            <header class="p-8 pb-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-1">Jurnal Trading</h2>
+                    <p class="text-slate-400">Catat setiap trading plan, eksekusi, dan evaluasi hasil tradingmu.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <!-- Date Range Picker -->
+                    <div
+                        class="bg-[#1e293b] border border-slate-700 rounded-lg px-4 py-2 flex items-center gap-3 cursor-pointer hover:bg-slate-800 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                        <span class="text-sm font-medium">01/05/2024 - 31/05/2024</span>
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                            </path>
+                        </svg>
+                    </div>
+                    <!-- Action Button -->
+                    <button
+                        class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg flex items-center gap-2 transition-transform active:scale-95 shadow-lg shadow-green-900/20">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2"></path>
+                        </svg>
+                        Tambah Entry
+                    </button>
+                </div>
+            </header>
+            <!-- END: Page Header -->
+            <!-- BEGIN: Stats Overview -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 px-8 py-6"
+                data-purpose="summary-cards">
+                <!-- Card 1: Total Trade -->
+                <div class="bg-[#1e293b] p-5 rounded-2xl border border-slate-700/50 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Total Trade</p>
+                        <p class="text-2xl font-bold text-white">24</p>
+                    </div>
+                </div>
+                <!-- Card 2: Win -->
+                <div class="bg-[#1e293b] p-5 rounded-2xl border border-slate-700/50 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Win</p>
+                        <p class="text-2xl font-bold text-white">14 <span
+                                class="text-sm font-normal text-green-400/80 ml-1">(58.3%)</span></p>
+                    </div>
+                </div>
+                <!-- Card 3: Loss -->
+                <div class="bg-[#1e293b] p-5 rounded-2xl border border-slate-700/50 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Loss</p>
+                        <p class="text-2xl font-bold text-white">10 <span
+                                class="text-sm font-normal text-red-400/80 ml-1">(41.7%)</span></p>
+                    </div>
+                </div>
+                <!-- Card 4: Win Rate -->
+                <div class="bg-[#1e293b] p-5 rounded-2xl border border-slate-700/50 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2"></path>
+                            <path d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">Win Rate</p>
+                        <p class="text-2xl font-bold text-white">58.3%</p>
+                    </div>
+                </div>
+                <!-- Card 5: RRR -->
+                <div class="bg-[#1e293b] p-5 rounded-2xl border border-slate-700/50 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium uppercase tracking-wider">RRR</p>
+                        <p class="text-2xl font-bold text-white">1.35</p>
+                    </div>
+                </div>
+            </section>
+            <!-- END: Stats Overview -->
+            <!-- BEGIN: Trading Table -->
+            <section class="px-8 pb-10 flex-1 min-h-0" data-purpose="trading-log-table">
+                <div class="bg-[#1e293b]/30 rounded-2xl border border-slate-800 overflow-hidden flex flex-col h-full">
+                    <div class="overflow-x-auto flex-1">
+                        <table class="w-full text-left border-collapse min-w-[1000px]">
+                            <thead
+                                class="bg-slate-900/50 text-slate-400 text-xs font-semibold uppercase tracking-wider">
+                                <tr>
+                                    <th class="px-6 py-4">Tanggal</th>
+                                    <th class="px-6 py-4">Pair</th>
+                                    <th class="px-6 py-4">Setup / Gambar</th>
+                                    <th class="px-6 py-4">Jenis Setup</th>
+                                    <th class="px-6 py-4">entry</th>
+                                    <th class="px-6 py-4">SL</th>
+                                    <th class="px-6 py-4">TP</th>
+                                    <th class="px-6 py-4">Hasil</th>
+                                    <th class="px-6 py-4">Catatan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-sm">
+                                <!-- Row 1: XAUUSD -->
+                                <tr class="table-row-hover transition-colors">
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <div class="text-white font-medium">28 Mei 2024</div>
+                                        <div class="text-slate-500 text-xs mt-0.5">10:15 WIB</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-white font-bold">XAUUSD</div>
+                                        <div class="text-red-400 text-xs font-semibold">Sell</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div
+                                            class="w-32 h-16 rounded-lg bg-slate-800 overflow-hidden border border-slate-700">
+                                            <img alt="Chart Setup"
+                                                class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTQE5UI0d5csp2VWsaNStYMEdzrKPc_y6LnjpRdMW59YxaF1zATNGA7iR8oE0sDEJKvfo8d55ofxyFlxlWE6DM0SsB4lQnR5hfNmKmasBNtUO7L3gmY0bPRXbS3ClaeUdoDk46qVa7PW_YrnFAtt6mqmso2tY6zep24aAB1AO6nhS9t1xWVKJBHrhaDKYhzIwGJ03lqMbOgzFCGx7A1xUnK1tKihtCKvyY9T2QLMo8nldCzpg8K1--u6LftClTExTdW1GydG5-F2Y">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">Break of Structure</div>
+                                        <div class="text-slate-500 text-xs">+ Supply</div>
+                                    </td>
+                                    <td class="px-6 py-5 text-slate-300 font-medium">2345.00</td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">2352.00</div>
+                                        <div class="text-red-400 text-xs font-semibold">(70 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">2330.00</div>
+                                        <div class="text-green-400 text-xs font-semibold">(150 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Berhasil
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="flex items-center gap-3">
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 2: EURUSD -->
+                                <tr class="table-row-hover transition-colors">
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <div class="text-white font-medium">27 Mei 2024</div>
+                                        <div class="text-slate-500 text-xs mt-0.5">14:30 WIB</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-white font-bold">EURUSD</div>
+                                        <div class="text-green-400 text-xs font-semibold">Buy</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div
+                                            class="w-32 h-16 rounded-lg bg-slate-800 overflow-hidden border border-slate-700">
+                                            <img alt="Chart Setup"
+                                                class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTQE5UI0d5csp2VWsaNStYMEdzrKPc_y6LnjpRdMW59YxaF1zATNGA7iR8oE0sDEJKvfo8d55ofxyFlxlWE6DM0SsB4lQnR5hfNmKmasBNtUO7L3gmY0bPRXbS3ClaeUdoDk46qVa7PW_YrnFAtt6mqmso2tY6zep24aAB1AO6nhS9t1xWVKJBHrhaDKYhzIwGJ03lqMbOgzFCGx7A1xUnK1tKihtCKvyY9T2QLMo8nldCzpg8K1--u6LftClTExTdW1GydG5-F2Y">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">Liquidity Sweep</div>
+                                        <div class="text-slate-500 text-xs">+ BOS</div>
+                                    </td>
+                                    <td class="px-6 py-5 text-slate-300 font-medium">1.08200</td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">1.07800</div>
+                                        <div class="text-red-400 text-xs font-semibold">(40 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">1.08900</div>
+                                        <div class="text-green-400 text-xs font-semibold">(70 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 text-red-500 text-xs font-bold border border-red-500/20">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                            Gagal
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="flex items-center gap-3">
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 3: GBPJPY -->
+                                <tr class="table-row-hover transition-colors">
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <div class="text-white font-medium">26 Mei 2024</div>
+                                        <div class="text-slate-500 text-xs mt-0.5">09:45 WIB</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-white font-bold">GBPJPY</div>
+                                        <div class="text-green-400 text-xs font-semibold">Buy</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div
+                                            class="w-32 h-16 rounded-lg bg-slate-800 overflow-hidden border border-slate-700">
+                                            <img alt="Chart Setup"
+                                                class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTQE5UI0d5csp2VWsaNStYMEdzrKPc_y6LnjpRdMW59YxaF1zATNGA7iR8oE0sDEJKvfo8d55ofxyFlxlWE6DM0SsB4lQnR5hfNmKmasBNtUO7L3gmY0bPRXbS3ClaeUdoDk46qVa7PW_YrnFAtt6mqmso2tY6zep24aAB1AO6nhS9t1xWVKJBHrhaDKYhzIwGJ03lqMbOgzFCGx7A1xUnK1tKihtCKvyY9T2QLMo8nldCzpg8K1--u6LftClTExTdW1GydG5-F2Y">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">Order Block</div>
+                                        <div class="text-slate-500 text-xs">+ FVG</div>
+                                    </td>
+                                    <td class="px-6 py-5 text-slate-300 font-medium">199.500</td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">198.800</div>
+                                        <div class="text-red-400 text-xs font-semibold">(70 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">201.000</div>
+                                        <div class="text-green-400 text-xs font-semibold">(150 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Berhasil
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="flex items-center gap-3">
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Row 4: US30 -->
+                                <tr class="table-row-hover transition-colors">
+                                    <td class="px-6 py-5 whitespace-nowrap">
+                                        <div class="text-white font-medium">25 Mei 2024</div>
+                                        <div class="text-slate-500 text-xs mt-0.5">16:20 WIB</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-white font-bold">US30</div>
+                                        <div class="text-red-400 text-xs font-semibold">Sell</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div
+                                            class="w-32 h-16 rounded-lg bg-slate-800 overflow-hidden border border-slate-700">
+                                            <img alt="Chart Setup"
+                                                class="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+                                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTQE5UI0d5csp2VWsaNStYMEdzrKPc_y6LnjpRdMW59YxaF1zATNGA7iR8oE0sDEJKvfo8d55ofxyFlxlWE6DM0SsB4lQnR5hfNmKmasBNtUO7L3gmY0bPRXbS3ClaeUdoDk46qVa7PW_YrnFAtt6mqmso2tY6zep24aAB1AO6nhS9t1xWVKJBHrhaDKYhzIwGJ03lqMbOgzFCGx7A1xUnK1tKihtCKvyY9T2QLMo8nldCzpg8K1--u6LftClTExTdW1GydG5-F2Y">
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">Rejection</div>
+                                        <div class="text-slate-500 text-xs">+ Supply</div>
+                                    </td>
+                                    <td class="px-6 py-5 text-slate-300 font-medium">39200</td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">39400</div>
+                                        <div class="text-red-400 text-xs font-semibold">(200 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="text-slate-300">38800</div>
+                                        <div class="text-green-400 text-xs font-semibold">(400 pips)</div>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500/10 text-green-500 text-xs font-bold border border-green-500/20">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            Berhasil
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-5">
+                                        <div class="flex items-center gap-3">
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <button class="text-slate-400 hover:text-white transition-colors">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- BEGIN: Pagination -->
+                    <div
+                        class="bg-slate-900/50 px-6 py-4 flex items-center justify-center gap-2 border-t border-slate-800">
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"></path>
+                            </svg>
+                        </button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded bg-green-600 text-white font-bold text-xs">1</button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:text-white transition-colors text-xs">2</button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:text-white transition-colors text-xs">3</button>
+                        <button
+                            class="w-8 h-8 flex items-center justify-center rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- END: Pagination -->
+                </div>
+            </section>
+            <!-- END: Trading Table -->
+        </main>
+        <!-- END: Main Content Area -->
+    </div>
+
+
+</body>
+
+</html>

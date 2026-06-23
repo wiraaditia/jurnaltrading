@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Backtest Header & Stats -->
+<div class="mb-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+            <h1 class="text-2xl font-bold font-mono text-white tracking-wider">BACKTEST MODE</h1>
+            <p class="text-xs text-gray-500 mt-1">Simulate strategies and log historical trades to analyze historical winrate and performance.</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="text-xs text-gray-400 bg-brand-accent/50 px-3 py-1.5 rounded-lg border border-brand-accent/80 font-mono">
+                Strategy Analyzer v1.0
+            </span>
+        </div>
+    </div>
+
+    <!-- OOB swapped backtest stats -->
+    <div id="backtest-stats" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Total Simulated Trades -->
+        <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Backtest Trades</span>
+            <div class="flex items-baseline justify-between mt-4">
+                <span class="text-3xl font-mono font-bold text-white">{{ stats.total_trades }}</span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-brand-accent text-gray-400 font-medium">Trades</span>
+            </div>
+        </div>
+
+        <!-- Backtest Win Rate -->
+        <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between {% if stats.winrate >= 50 %}glow-success/10{% else %}glow-danger/10{% endif %}">
+            <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Simulated Win Rate</span>
+            <div class="flex items-baseline justify-between mt-4">
+                <span class="text-3xl font-mono font-bold {% if stats.winrate >= 50 %}text-brand-success{% else %}text-brand-danger{% endif %}">
+                    {{ stats.winrate }}%
+                </span>
+                <span class="text-xs px-2.5 py-1 rounded-full font-medium {% if stats.winrate >= 50 %}bg-brand-success/10 text-brand-success{% else %}bg-brand-danger/10 text-brand-danger{% endif %}">
+                    {{ stats.wins }}W - {{ stats.losses }}L
+                </span>
+            </div>
+        </div>
+
+        <!-- Backtest Net PnL -->
+        <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between {% if stats.total_pnl >= 0 %}glow-success/10{% else %}glow-danger/10{% endif %}">
+            <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Simulated Net Profit</span>
+            <div class="flex items-baseline justify-between mt-4">
+                <span class="text-3xl font-mono font-bold {% if stats.total_pnl >= 0 %}text-brand-success{% else %}text-brand-danger{% endif %}">
+                    {% if stats.total_pnl > 0 %}+{% endif %}{{ stats.total_pnl }}%
+                </span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-brand-accent/50 text-gray-400 font-medium font-mono">
+                    Total
+                </span>
+            </div>
+        </div>
+
+        <!-- Backtest Average PnL -->
+        <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Avg Profit/Loss per Trade</span>
+            <div class="flex items-baseline justify-between mt-4">
+                <span class="text-3xl font-mono font-bold {% if stats.avg_pnl >= 0 %}text-brand-success{% else %}text-brand-danger{% endif %}">
+                    {% if stats.avg_pnl > 0 %}+{% endif %}{{ stats.avg_pnl }}%
+                </span>
+                <span class="text-xs px-2.5 py-1 rounded-full bg-brand-accent/50 text-gray-400 font-medium font-mono">
+                    Average
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left: Log Simulated Trade Form -->
+    <div class="lg:col-span-1">
+        <form hx-post="/backtest" 
+              hx-target="#backtest-table-body" 
+              hx-swap="afterbegin"
+              hx-on::after-request="this.reset()"
+              class="bg-brand-card border border-brand-accent/50 rounded-2xl p-6 space-y-4 shadow-xl">
+            
+            <h3 class="text-lg font-bold font-mono text-white flex items-center gap-2 border-b border-brand-accent/30 pb-3">
+                <svg class="w-5 h-5 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                LOG BACKTEST TRADE
+            </h3>
+
+            <!-- Pair & Type -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">PAIR</label>
+                    <input type="text" name="pair" required placeholder="BTCUSDT" 
+                           class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold font-mono uppercase">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">TYPE</label>
+                    <select name="position_type" class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold font-mono">
+                        <option value="Long">LONG</option>
+                        <option value="Short">SHORT</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Entry & Exit Prices -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">ENTRY PRICE</label>
+                    <input type="number" step="any" name="entry_price" required placeholder="0.0" 
+                           class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">EXIT PRICE</label>
+                    <input type="number" step="any" name="exit_price" required placeholder="0.0" 
+                           class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold font-mono">
+                </div>
+            </div>
+
+            <!-- Status & PnL -->
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">OUTCOME</label>
+                    <select name="status" class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold font-mono">
+                        <option value="Win">WIN</option>
+                        <option value="Loss">LOSS</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-400 mb-1">NET PnL (%)</label>
+                    <input type="number" step="any" name="pnl" required placeholder="e.g. +12.5 or -5" 
+                           class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold font-mono">
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-400 mb-1">NOTES / STRATEGY</label>
+                <textarea name="notes" rows="2" placeholder="e.g. EMA Crossover on 15m..." 
+                          class="w-full bg-brand-dark border border-brand-accent/80 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-brand-gold"></textarea>
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-gradient-to-r from-brand-gold to-yellow-500 text-brand-dark font-mono font-bold py-2.5 rounded-xl transition-all hover:scale-[1.02] shadow-lg shadow-brand-gold/15">
+                LOG TRADE
+            </button>
+        </form>
+    </div>
+
+    <!-- Right: Simulated Trades List -->
+    <div class="lg:col-span-2">
+        <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-6 overflow-hidden">
+            <h3 class="text-lg font-bold font-mono text-white mb-4 tracking-wider flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-success"></span>
+                SIMULATION LOG
+            </h3>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left font-mono text-sm border-collapse">
+                    <thead>
+                        <tr class="border-b border-brand-accent/50 text-gray-400 text-xs">
+                            <th class="py-3 px-4 font-semibold">PAIR</th>
+                            <th class="py-3 px-4 font-semibold">TYPE</th>
+                            <th class="py-3 px-4 font-semibold text-right">ENTRY</th>
+                            <th class="py-3 px-4 font-semibold text-right">EXIT</th>
+                            <th class="py-3 px-4 font-semibold text-center">OUTCOME</th>
+                            <th class="py-3 px-4 font-semibold text-right">PnL</th>
+                            <th class="py-3 px-4 text-center">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="backtest-table-body" class="divide-y divide-brand-accent/20">
+                        {% for trade in trades %}
+                            {% include "components/backtest_row.html" %}
+                        {% else %}
+                            <tr id="empty-row">
+                                <td colspan="7" class="py-8 text-center text-gray-500 text-xs">
+                                    No simulated trades logged yet. Start backtesting above.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

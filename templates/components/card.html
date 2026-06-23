@@ -1,0 +1,45 @@
+<div id="stat-cards" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" hx-swap-oob="true">
+    <!-- Total Trades -->
+    <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between transition-all hover:border-brand-gold/30">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Trades</span>
+        <div class="flex items-baseline justify-between mt-4">
+            <span class="text-3xl font-mono font-bold text-white">{{ stats.total_trades }}</span>
+            <span class="text-xs px-2.5 py-1 rounded-full bg-brand-accent text-gray-400 font-medium">Trades</span>
+        </div>
+    </div>
+
+    <!-- Win Rate -->
+    <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between transition-all hover:border-brand-gold/30 {% if stats.winrate >= 50 %}glow-success/10{% else %}glow-danger/10{% endif %}">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Win Rate</span>
+        <div class="flex items-baseline justify-between mt-4">
+            <span class="text-3xl font-mono font-bold {% if stats.winrate >= 50 %}text-brand-success{% else %}text-brand-danger{% endif %}">
+                {{ stats.winrate }}%
+            </span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium {% if stats.winrate >= 50 %}bg-brand-success/10 text-brand-success{% else %}bg-brand-danger/10 text-brand-danger{% endif %}">
+                {{ stats.wins }}W - {{ stats.losses }}L
+            </span>
+        </div>
+    </div>
+
+    <!-- Total Net PnL -->
+    <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between transition-all hover:border-brand-gold/30 {% if stats.total_pnl >= 0 %}glow-success/10{% else %}glow-danger/10{% endif %}">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Net Profit / Loss</span>
+        <div class="flex items-baseline justify-between mt-4">
+            <span class="text-3xl font-mono font-bold {% if stats.total_pnl >= 0 %}text-brand-success{% else %}text-brand-danger{% endif %}">
+                {% if stats.total_pnl > 0 %}+{% endif %}{{ stats.total_pnl }}%
+            </span>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium {% if stats.total_pnl >= 0 %}bg-brand-success/10 text-brand-success{% else %}bg-brand-danger/10 text-brand-danger{% endif %}">
+                USDT Equiv
+            </span>
+        </div>
+    </div>
+
+    <!-- Active Trades -->
+    <div class="bg-brand-card border border-brand-accent/50 rounded-2xl p-5 flex flex-col justify-between transition-all hover:border-brand-gold/30">
+        <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Running / Open</span>
+        <div class="flex items-baseline justify-between mt-4">
+            <span class="text-3xl font-mono font-bold text-brand-gold">{{ stats.active_trades }}</span>
+            <span class="text-xs px-2.5 py-1 rounded-full bg-brand-gold/10 text-brand-gold font-medium">Active</span>
+        </div>
+    </div>
+</div>

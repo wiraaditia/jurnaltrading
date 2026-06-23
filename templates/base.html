@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptonicle - Crypto Futures Trading Journal</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"Space Grotesk"', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            gold: '#F3BA2F', // Binance Yellow/Gold
+                            dark: '#0B0E11',
+                            card: '#181A20',
+                            accent: '#2B3139',
+                            success: '#0ECB81',
+                            danger: '#F6465D',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0B0E11;
+            color: #EAECEF;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0E11;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2B3139;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #F3BA2F;
+        }
+        .glow-gold {
+            box-shadow: 0 0 20px rgba(243, 186, 47, 0.15);
+        }
+        .glow-success {
+            box-shadow: 0 0 20px rgba(14, 203, 129, 0.15);
+        }
+        .glow-danger {
+            box-shadow: 0 0 20px rgba(246, 70, 93, 0.15);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col selection:bg-brand-gold selection:text-brand-dark">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-brand-accent/50 bg-brand-dark/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-gold to-yellow-500 flex items-center justify-center font-mono font-bold text-brand-dark text-lg shadow-lg shadow-brand-gold/20">
+                        C
+                    </div>
+                    <span class="font-mono text-xl font-bold tracking-tight text-white">CRYPTONICLE</span>
+                </div>
+                
+                <!-- Nav Links -->
+                <nav class="flex items-center gap-1">
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-brand-accent {% if active_page == 'journal' %}bg-brand-accent text-brand-gold{% else %}text-gray-400 hover:text-white{% endif %}">
+                        Journal
+                    </a>
+                    <a href="/backtest" class="px-4 py-2 rounded-lg text-sm font-medium transition-all hover:bg-brand-accent {% if active_page == 'backtest' %}bg-brand-accent text-brand-gold{% else %}text-gray-400 hover:text-white{% endif %}">
+                        Backtest Mode
+                    </a>
+                </nav>
+                
+                <!-- Quick Stats Badge -->
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-accent/40 border border-brand-accent text-xs">
+                    <span class="w-2 h-2 rounded-full bg-brand-success animate-pulse"></span>
+                    <span class="text-gray-400 font-medium">Crypto Futures Mode Active</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-brand-accent/30 py-6 bg-brand-dark/40">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-500">
+            &copy; 2026 Cryptonicle. Designed for personal crypto futures journaling.
+        </div>
+    </footer>
+
+</body>
+</html>

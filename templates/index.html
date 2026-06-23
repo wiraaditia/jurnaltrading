@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Stats Banner -->
+{% include "components/card.html" %}
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Add Trade Form -->
+    <div class="lg:col-span-1">
+        <div class="sticky top-20">
+            {% include "components/form.html" %}
+        </div>
+    </div>
+    
+    <!-- Right Column: Grid Journal Cards -->
+    <div class="lg:col-span-2">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold font-mono text-white tracking-wider flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-brand-gold"></span>
+                JOURNAL LOGS
+            </h2>
+            <div class="flex gap-2">
+                <!-- Simple status quick filters using HTMX if needed, or simple tags -->
+                <span class="text-xs text-gray-500 font-mono">Real-time update enabled</span>
+            </div>
+        </div>
+
+        <!-- Journal Container Grid -->
+        <div id="journal-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for entry in entries %}
+                {% include "components/card_item.html" %}
+            {% else %}
+                <div class="col-span-full bg-brand-card border border-brand-accent/30 rounded-2xl p-12 text-center">
+                    <div class="w-16 h-16 bg-brand-accent/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-1">No Journal Entries Yet</h3>
+                    <p class="text-sm text-gray-500 max-w-sm mx-auto">Start logging your futures trades using the form on the left to track winrate, PnL, and charts.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
