@@ -49,9 +49,16 @@ def get_google_drive_service():
         return build("drive", "v3", credentials=creds)
     return None
 
-# Folder fallback lokal
-UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+# Folder fallback lokal (Gunakan /tmp di Vercel karena root directory read-only)
+if os.environ.get("VERCEL") or os.environ.get("NOW_REGION"):
+    UPLOAD_DIR = "/tmp/uploads"
+else:
+    UPLOAD_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "uploads")
+
+try:
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create upload directory: {e}")
 
 def save_image(file: UploadFile) -> str:
     """
