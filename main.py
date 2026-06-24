@@ -18,12 +18,22 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="Cryptonicle - Crypto Futures Trading Journal")
 
 # Mount uploads folder to serve uploaded chart images
-if os.environ.get("VERCEL"):
+if os.environ.get("VERCEL") or os.environ.get("NOW_REGION"):
     UPLOAD_DIR = "/tmp/uploads"
 else:
     UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+
+try:
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+except Exception as e:
+    print(f"Warning: Could not create upload directory: {e}")
+
+# Mount static files safely
+try:
+    app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+except Exception as e:
+    print(f"Warning: Could not mount uploads: {e}")
+
 
 # Jinja2 Templates Setup
 templates = Jinja2Templates(directory=os.path.join(os.path.dirname(__file__), "templates"))

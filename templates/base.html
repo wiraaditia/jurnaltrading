@@ -2,7 +2,12 @@
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0f1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Trading Journal">
+    <meta name="description" content="Catat, analisis, dan evaluasi setiap trading Anda secara real-time.">
     <title>Trading Journal Dashboard</title>
     <!-- Tailwind CSS v3 CDN -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -45,11 +50,120 @@
         .table-row-hover:hover {
             background-color: rgba(255, 255, 255, 0.02);
         }
+
+        /* ===================== PWA BOTTOM NAVBAR ===================== */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-top: 1px solid rgba(51, 65, 85, 0.6);
+            padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .bottom-nav-inner {
+            display: flex;
+            align-items: stretch;
+            height: 64px;
+        }
+
+        .bottom-nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            text-decoration: none;
+            color: #64748b;
+            transition: color 0.2s ease, transform 0.15s ease;
+            position: relative;
+            padding: 8px 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bottom-nav-item:active {
+            transform: scale(0.92);
+        }
+
+        .bottom-nav-item span {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            line-height: 1;
+        }
+
+        .bottom-nav-item svg {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.2s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: #22c55e;
+        }
+
+        .bottom-nav-item.active svg {
+            filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.5));
+        }
+
+        /* Active indicator dot above icon */
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 3px;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+
+        /* Ripple effect on tap */
+        .bottom-nav-item .nav-ripple {
+            position: absolute;
+            inset: 6px;
+            border-radius: 12px;
+            background: rgba(34, 197, 94, 0.08);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .bottom-nav-item.active .nav-ripple,
+        .bottom-nav-item:hover .nav-ripple {
+            opacity: 1;
+        }
+
+        /* Show bottom nav only on mobile */
+        @media (max-width: 767px) {
+            .bottom-nav {
+                display: block;
+            }
+
+            /* Hide sidebar on mobile */
+            [data-purpose="navigation-sidebar"] {
+                display: none !important;
+            }
+
+            /* Add bottom padding to main content so navbar doesn't cover content */
+            [data-purpose="main-content"] {
+                padding-bottom: calc(64px + env(safe-area-inset-bottom));
+            }
+        }
+        /* ============================================================= */
     </style>
 </head>
 <body class="antialiased overflow-hidden min-h-screen">
     <div class="flex h-screen overflow-hidden" data-purpose="main-wrapper">
-        <!-- BEGIN: Sidebar -->
+        <!-- BEGIN: Sidebar (desktop only) -->
         <aside class="w-64 bg-[#0f172a] border-r border-slate-800 flex flex-col shrink-0" data-purpose="navigation-sidebar">
             <!-- Logo Section -->
             <div class="p-6 flex items-center gap-3">
@@ -97,5 +211,39 @@
             {% block content %}{% endblock %}
         </main>
     </div>
+
+    <!-- ===================== BEGIN: PWA Bottom Navbar (Mobile Only) ===================== -->
+    <nav class="bottom-nav" id="bottom-nav" role="navigation" aria-label="Mobile navigation">
+        <div class="bottom-nav-inner">
+
+            <!-- Dashboard Jurnal -->
+            <a href="/"
+               id="nav-journal"
+               class="bottom-nav-item {% if active_page == 'journal' %}active{% endif %}"
+               aria-label="Dashboard Jurnal">
+                <span class="nav-ripple"></span>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Jurnal</span>
+            </a>
+
+
+            <!-- Backtest Mode -->
+            <a href="/backtest"
+               id="nav-backtest"
+               class="bottom-nav-item {% if active_page == 'backtest' %}active{% endif %}"
+               aria-label="Backtest Mode">
+                <span class="nav-ripple"></span>
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+                <span>Backtest</span>
+            </a>
+
+        </div>
+    </nav>
+    <!-- ===================== END: PWA Bottom Navbar ===================== -->
+
 </body>
 </html>
