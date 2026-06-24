@@ -133,10 +133,14 @@ def save_image(file: UploadFile) -> str:
             return f"https://drive.google.com/uc?export=view&id={file_id}"
             
     except Exception as e:
-        print(f"Failed to upload to Google Drive, falling back to local storage: {e}")
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"CRITICAL: Failed to upload to Google Drive. Error: {e}")
+        print(f"Traceback details:\n{error_details}")
 
     # Fallback to local storage
     file_path = os.path.join(UPLOAD_DIR, unique_filename)
+
     # Ensure seek is at 0 in case the stream was partially read
     try:
         file.file.seek(0)
