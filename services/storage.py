@@ -26,10 +26,25 @@ def get_google_drive_service():
     env_creds = os.environ.get("GDRIVE_SERVICE_ACCOUNT_JSON")
     if env_creds:
         try:
+            # Clean up potential copy-paste issues with escaped newlines
+            if isinstance(env_creds, str):
+                # Clean up wrapping quotes if mistakenly added by user
+                env_creds = env_creds.strip()
+                if env_creds.startswith("'") and env_creds.endswith("'"):
+                    env_creds = env_creds[1:-1]
+                if env_creds.startswith('"') and env_creds.endswith('"'):
+                    env_creds = env_creds[1:-1]
+                
             creds_dict = json.loads(env_creds)
+            
+            # Ensure private key has correct newline characters
+            if "private_key" in creds_dict:
+                creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+                
             creds = service_account.Credentials.from_service_account_info(creds_dict, scopes=scopes)
+            print("Google Drive credentials successfully loaded from environment variable.")
         except Exception as e:
-            print(f"Failed to load credentials from env: {e}")
+            print(f"Error parsing GDRIVE_SERVICE_ACCOUNT_JSON environment variable: {e}")
 
     # 2. Fallback to local file (development)
     if not creds:
@@ -42,12 +57,19 @@ def get_google_drive_service():
         if key_path:
             try:
                 creds = service_account.Credentials.from_service_account_file(key_path, scopes=scopes)
+                print(f"Google Drive credentials loaded from local file: {key_path}")
             except Exception as e:
                 print(f"Failed to load credentials from file {key_path}: {e}")
 
     if creds:
-        return build("drive", "v3", credentials=creds)
+        try:
+            return build("drive", "v3", credentials=creds)
+        except Exception as e:
+            print(f"Failed to build Google Drive client service: {e}")
+    else:
+        print("Warning: No Google Drive credentials found. Using local fallback.")
     return None
+
 
 # Folder fallback lokal (Gunakan /tmp di Vercel karena root directory read-only)
 if os.environ.get("VERCEL") or os.environ.get("NOW_REGION"):
